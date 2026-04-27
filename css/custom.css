@@ -1,18 +1,23 @@
-/* 调整首页文章卡片的整体高度 */
-#recent-posts > .recent-post-item {
-  height: 140px !important; /* 你可以根据喜好调整这个数值 */
-  max-height: 250px;
+/* 强制统一卡片高度 */
+#recent-posts > .recent-post-items > .recent-post-item {
+  height: 150px !important;
+  min-height: 150px !important;
+  overflow: hidden !important;
 }
 
-/* 如果使用了交替布局，确保图片高度也自适应 */
-#recent-posts > .recent-post-item .post_cover {
+/* 让封面图完美填满半边 */
+#recent-posts > .recent-post-items > .recent-post-item .post_cover {
+  width: 40% !important;
   height: 100% !important;
+  margin: 0 !important;
 }
 
-/* 调整文字部分垂直居中 */
-#recent-posts > .recent-post-item > .recent-post-info {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+/* 让标题文字部分居中对齐 */
+#recent-posts > .recent-post-items > .recent-post-item > .recent-post-info {
+  width: 60% !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  padding: 0 20px !important;
 }
