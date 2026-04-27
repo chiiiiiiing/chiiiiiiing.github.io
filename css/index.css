@@ -1625,7 +1625,7 @@ canvas:not(#ribbon-canvas),
   }
 }
 :root {
-  --global-font-size: 14px;
+  --global-font-size: 18px;
   --global-bg: #fff;
   --font-color: #4c4948;
   --hr-border: #999;
@@ -4934,7 +4934,7 @@ figure.highlight pre .javascript .function {
   overflow-wrap: break-word;
 }
 .container a {
-  color: #ccc;
+  color: #507491;
 }
 .container a:hover {
   text-decoration: underline;
