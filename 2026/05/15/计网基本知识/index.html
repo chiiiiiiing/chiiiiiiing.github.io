@@ -1,0 +1,371 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>计算机网络、互联网与 Web 渲染原理 | Chiiiiiiing Blog</title><meta name="author" content="Chiiiiiiing"><meta name="copyright" content="Chiiiiiiing"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一、计算机网络到底是什么 计算机网络是由多台计算机、服务器、路由设备和传输介质组成的通信系统，其核心任务是让不同设备之间能够交换数据。 网络通信需要解决以下问题：  目标地址怎么找到。 数据怎么一段段传过去。 中途如果丢了怎么办。 两台设备说的话怎么才能互相听懂。  计算机网络中的三个基础概念如下：  分层：将复杂通信过程拆分为多个层次，每一层只处理一类问题。 协议：通信双方必须遵守的规则集合，用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机网络、互联网与 Web 渲染原理">
+<meta property="og:url" content="https://chiiiiiiing.github.io/2026/05/15/%E8%AE%A1%E7%BD%91%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/index.html">
+<meta property="og:site_name" content="Chiiiiiiing Blog">
+<meta property="og:description" content="一、计算机网络到底是什么 计算机网络是由多台计算机、服务器、路由设备和传输介质组成的通信系统，其核心任务是让不同设备之间能够交换数据。 网络通信需要解决以下问题：  目标地址怎么找到。 数据怎么一段段传过去。 中途如果丢了怎么办。 两台设备说的话怎么才能互相听懂。  计算机网络中的三个基础概念如下：  分层：将复杂通信过程拆分为多个层次，每一层只处理一类问题。 协议：通信双方必须遵守的规则集合，用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://chiiiiiiing.github.io/images/p1.jpg">
+<meta property="article:published_time" content="2026-05-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-05-15T02:21:40.944Z">
+<meta property="article:author" content="Chiiiiiiing">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://chiiiiiiing.github.io/images/p1.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "计算机网络、互联网与 Web 渲染原理",
+  "url": "https://chiiiiiiing.github.io/2026/05/15/%E8%AE%A1%E7%BD%91%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/",
+  "image": "https://chiiiiiiing.github.io/images/p1.jpg",
+  "datePublished": "2026-05-14T16:00:00.000Z",
+  "dateModified": "2026-05-15T02:21:40.944Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Chiiiiiiing",
+      "url": "https://chiiiiiiing.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://chiiiiiiing.github.io/2026/05/15/%E8%AE%A1%E7%BD%91%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.3-b1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000000')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '计算机网络、互联网与 Web 渲染原理',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><meta name="generator" content="Hexo 8.1.1"></head><body><div id="web_bg" style="background: blank;"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/p1.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">8</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/cover.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/images/p1.jpg" alt="Logo"><span class="site-name">Chiiiiiiing Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">计算机网络、互联网与 Web 渲染原理</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">计算机网络、互联网与 Web 渲染原理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-05-14T16:00:00.000Z" title="发表于 2026-05-15 00:00:00">2026-05-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-05-15T02:21:40.944Z" title="更新于 2026-05-15 10:21:40">2026-05-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/X-Lab-notes/">X-Lab notes</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="一、计算机网络到底是什么">一、计算机网络到底是什么</h2>
+<p>计算机网络是由多台计算机、服务器、路由设备和传输介质组成的通信系统，其核心任务是让不同设备之间能够交换数据。</p>
+<p>网络通信需要解决以下问题：</p>
+<ul>
+<li>目标地址怎么找到。</li>
+<li>数据怎么一段段传过去。</li>
+<li>中途如果丢了怎么办。</li>
+<li>两台设备说的话怎么才能互相听懂。</li>
+</ul>
+<p>计算机网络中的三个基础概念如下：</p>
+<ul>
+<li>分层：将复杂通信过程拆分为多个层次，每一层只处理一类问题。</li>
+<li>协议：通信双方必须遵守的规则集合，用于规定数据格式、交互方式和处理流程。</li>
+<li>封装：高层数据在传输过程中会被逐层加入协议头和协议尾，形成适合下层传输的数据单元。</li>
+</ul>
+<p>计算机网络的学习重点是明确“数据在每一层如何表示、如何传递、如何被处理”。</p>
+<h2 id="二、互联网和普通网络有什么关系">二、互联网和普通网络有什么关系</h2>
+<p>计算机网络是广义概念，互联网是其中规模最大、覆盖最广的一种实现形式。</p>
+<p>互联网由多个局域网、广域网和自治系统通过路由器互联形成，并以 TCP/IP 协议族作为主要通信基础。学校局域网、公司内网、家庭网络和运营商网络都可以通过接入设备连接到互联网。</p>
+<p>网页访问、即时通信、视频传输、在线游戏、云存储同步等行为，本质上都是通过互联网进行数据交换。</p>
+<h2 id="三、分层模型怎么理解">三、分层模型怎么理解</h2>
+<p>分层模型的作用是划分职责边界，使通信系统的设计、实现和排错都更清晰。</p>
+<h3 id="1-先记住-TCP-IP-四层">1. 先记住 TCP/IP 四层</h3>
+<p>TCP/IP 四层模型是互联网最常用的分层方式：</p>
+<ol>
+<li>网络接口层：负责局部链路内的数据传输，包括以太网、Wi-Fi、PPP 等技术。</li>
+<li>网际层：负责跨网络寻址与路由转发，核心协议是 IP。</li>
+<li>传输层：负责端到端通信，核心协议包括 TCP 和 UDP。</li>
+<li>应用层：负责面向具体应用的协议，例如 HTTP、HTTPS、DNS、SMTP、SSH。</li>
+</ol>
+<p>OSI 七层模型主要用于理论描述和教学理解。实际互联网更常按 TCP/IP 四层进行分析。</p>
+<h3 id="2-一个具体例子">2. 一个具体例子</h3>
+<p>浏览器访问网页时，各层的职责如下：</p>
+<ul>
+<li>HTTP 负责定义浏览器和服务器之间的请求响应格式。</li>
+<li>TCP 负责保证数据尽可能可靠地到达对端。</li>
+<li>IP 负责根据目标地址完成跨网络转发。</li>
+<li>Wi-Fi 或网线负责在本地链路上传输比特流。</li>
+</ul>
+<p>分层的意义在于：上层只依赖下层提供的能力，而不需要关心下层的具体实现方式。</p>
+<h2 id="四、IP、MAC、路由分别是什么">四、IP、MAC、路由分别是什么</h2>
+<h3 id="1-IP-地址">1. IP 地址</h3>
+<p>IP 地址是网络层地址，用于标识主机或网络接口在互联网络中的位置。</p>
+<p>IP 地址的作用是让数据包能够在不同网络之间被正确转发。IPv4 采用 32 位地址，常见书写形式为点分十进制；IPv6 采用 128 位地址，主要用于缓解 IPv4 地址枯竭问题。</p>
+<p>IP 层关注的是跨网络寻址，不负责局域网内部的最后一次链路投递。</p>
+<h3 id="2-MAC-地址">2. MAC 地址</h3>
+<p>MAC 地址是数据链路层使用的地址，通常用于局域网内识别网卡。</p>
+<p>MAC 地址是网卡的链路层标识，用于在同一局域网中定位目标接口。以太网帧在局域网内转发时依赖 MAC 地址完成投递。</p>
+<h3 id="3-ARP-和路由">3. ARP 和路由</h3>
+<p>ARP（地址解析协议）的作用是根据已知 IP 地址查询对应的 MAC 地址，前提是目标位于同一局域网或可达的链路范围内。</p>
+<p>路由器的作用是在不同网络之间转发数据包。路由器根据路由表选择下一跳，并在转发过程中替换局部链路层地址。</p>
+<h2 id="五、DNS-为什么要存在">五、DNS 为什么要存在</h2>
+<p>域名用于提高记忆性和可读性，网络传输真正依赖的是 IP 地址。</p>
+<p>DNS（Domain Name System）的作用是将域名解析为 IP 地址，并支持分布式查询和缓存机制。</p>
+<p>DNS 解析通常经过以下步骤：</p>
+<ol>
+<li>浏览器查询本地缓存。</li>
+<li>操作系统查询本地缓存。</li>
+<li>如未命中缓存，请求递归 DNS 服务器。</li>
+<li>递归服务器按根域名服务器、顶级域名服务器、权威域名服务器的顺序查询。</li>
+<li>返回域名对应的 IP 地址，并附带缓存时间。</li>
+</ol>
+<p>DNS 的核心结果是把“人可读的域名”转换为“机器可通信的 IP 地址”。</p>
+<h2 id="六、TCP-和-UDP-怎么选">六、TCP 和 UDP 怎么选</h2>
+<h3 id="1-UDP">1. UDP</h3>
+<p>UDP 是无连接的传输层协议，协议头开销小，传输方式简单，但不保证可靠到达、不保证顺序，也不提供自动重传。</p>
+<p>UDP 常用于对实时性要求较高的场景，例如：</p>
+<ul>
+<li>语音通话。</li>
+<li>直播。</li>
+<li>在线游戏。</li>
+<li>DNS 查询。</li>
+</ul>
+<h3 id="2-TCP">2. TCP</h3>
+<p>TCP 是面向连接的传输层协议，提供可靠传输、按序交付、流量控制和拥塞控制。</p>
+<p>TCP 提供的能力包括：</p>
+<ul>
+<li>建立连接。</li>
+<li>可靠传输。</li>
+<li>按顺序收包。</li>
+<li>控制发送速度。</li>
+</ul>
+<p>TCP 的关键机制主要包括：</p>
+<ul>
+<li>三次握手：建立连接，确认双方的发送和接收能力，并同步初始序列号。</li>
+<li>四次挥手：关闭连接，TCP 的两个方向需要分别关闭。</li>
+<li>序列号和确认号：用于保证数据按序到达并确认接收情况。</li>
+<li>超时重传：在数据丢失或未收到确认时重新发送。</li>
+<li>滑动窗口：用于控制发送速率，避免接收方被过量数据压垮。</li>
+<li>拥塞控制：用于适应网络中的拥塞情况，降低丢包和延迟。</li>
+</ul>
+<h3 id="3-什么时候用谁">3. 什么时候用谁</h3>
+<p>是否选择 TCP 或 UDP，主要取决于业务对可靠性、延迟和顺序性的要求。</p>
+<p>当业务需要可靠性和完整性时，优先选择 TCP；当业务更重视实时性且可以容忍少量丢包时，通常选择 UDP，并在应用层补充必要的纠错或重传逻辑。</p>
+<h2 id="七、HTTP-是什么">七、HTTP 是什么</h2>
+<p>HTTP 是应用层协议，浏览器和服务器通过它交换请求与响应。</p>
+<p>HTTP 采用请求-响应模型。客户端发起请求，服务器根据请求返回响应。</p>
+<p>一次 HTTP 请求通常包括：</p>
+<ul>
+<li>请求行：请求方法、路径、版本。</li>
+<li>请求头：一些附加信息，比如浏览器信息、缓存信息、Cookie。</li>
+<li>请求体：需要提交的数据，比如表单或 JSON。</li>
+</ul>
+<p>一次 HTTP 响应通常包括：</p>
+<ul>
+<li>状态码：比如成功、重定向、找不到资源。</li>
+<li>响应头：告诉浏览器内容类型、缓存策略等。</li>
+<li>响应体：真正返回的数据，比如 HTML、图片、JS、JSON。</li>
+</ul>
+<h3 id="常见状态码">常见状态码</h3>
+<ul>
+<li>200：成功。</li>
+<li>301：永久重定向，资源地址发生长期变化。</li>
+<li>302：临时重定向，资源地址只是暂时变化。</li>
+<li>304：资源未修改，浏览器可直接使用缓存。</li>
+<li>400：请求语法错误或参数错误。</li>
+<li>401：未认证。</li>
+<li>403：无权限访问。</li>
+<li>404：资源不存在。</li>
+<li>500：服务器内部错误。</li>
+</ul>
+<p>HTTP 版本也会影响连接方式与性能特征。HTTP/1.1 以文本请求响应为主，HTTP/2 引入了多路复用和头部压缩，HTTP/3 基于 QUIC 进一步降低握手和队头阻塞的影响。</p>
+<h2 id="八、HTTPS-比-HTTP-多了什么">八、HTTPS 比 HTTP 多了什么</h2>
+<p>HTTPS 是 HTTP 与 TLS 的组合方案，用于在不可信网络环境中安全传输应用数据。</p>
+<p>HTTPS 主要解决以下问题：</p>
+<ul>
+<li>机密性：防止第三方直接读取传输内容。</li>
+<li>完整性：防止传输中的数据被修改。</li>
+<li>身份认证：通过证书确认服务器身份。</li>
+</ul>
+<p>TLS 握手的核心过程包括协商加密套件、验证证书、生成会话密钥。后续应用数据通常使用对称加密传输，以兼顾安全性和性能。</p>
+<h2 id="九、浏览器输入网址后发生了什么">九、浏览器输入网址后发生了什么</h2>
+<p>浏览器访问网页时，通常经历以下步骤：</p>
+<ol>
+<li>解析 URL，识别协议、域名、端口、路径和查询参数。</li>
+<li>通过 DNS 解析获取服务器 IP 地址。</li>
+<li>建立连接；如果使用 HTTPS，还需要进行 TLS 握手。</li>
+<li>发送 HTTP 请求获取 HTML 文档。</li>
+<li>服务器返回 HTML。</li>
+<li>浏览器解析 HTML，并发现其中引用的 CSS、JavaScript、图片、字体等外部资源。</li>
+<li>浏览器继续请求这些资源。</li>
+<li>浏览器根据解析结果生成可显示页面，并完成首次渲染。</li>
+</ol>
+<p>浏览器通常采用边下载、边解析、边渲染的方式工作，而不是等待所有资源完全下载后再统一显示。</p>
+<h2 id="十、Web-渲染原理入门版">十、Web 渲染原理入门版</h2>
+<p>Web 渲染的目标是将 HTML、CSS 和 JavaScript 描述的页面内容转换为屏幕上的可视结果。</p>
+<h3 id="1-浏览器里大致有哪些部分">1. 浏览器里大致有哪些部分</h3>
+<p>现代浏览器通常包含以下职责模块：</p>
+<ul>
+<li>用户界面模块：负责地址栏、标签页、书签和窗口管理。</li>
+<li>网络模块：负责请求和接收资源。</li>
+<li>渲染模块：负责解析 HTML 和 CSS、构建页面结构、执行布局与绘制。</li>
+<li>JavaScript 引擎：负责执行脚本。</li>
+<li>图形合成模块：负责图层合成与屏幕显示。</li>
+</ul>
+<h3 id="2-DOM-是什么">2. DOM 是什么</h3>
+<p>HTML 被浏览器解析后，会形成 DOM 树。</p>
+<p>DOM 是文档对象模型，表示 HTML 文档的结构化树形表示。HTML 中的元素、属性和文本会被解析为 DOM 节点，JavaScript 可以通过 DOM API 读取、修改、插入和删除这些节点。</p>
+<h3 id="3-CSSOM-是什么">3. CSSOM 是什么</h3>
+<p>CSS 也会被浏览器解析成结构化的数据，叫 CSSOM。</p>
+<p>CSSOM 是 CSS 对象模型，表示样式规则的结构化结果。DOM 描述页面结构，CSSOM 描述样式规则，二者结合后才能确定每个元素最终使用的样式。</p>
+<h3 id="4-渲染树是什么">4. 渲染树是什么</h3>
+<p>渲染树是由可见节点及其计算样式组成的树结构。浏览器会根据 DOM 和 CSSOM 生成渲染树，再基于渲染树进行后续处理。</p>
+<p>并非所有 DOM 节点都会进入渲染树。例如 <code>display: none</code> 的元素不会参与布局和绘制。</p>
+<h3 id="5-布局、绘制、合成分别在干什么">5. 布局、绘制、合成分别在干什么</h3>
+<p>先记一句简单的话：</p>
+<ul>
+<li>
+<p>布局：决定元素放哪儿、多大。</p>
+</li>
+<li>
+<p>绘制：把元素画出来。</p>
+</li>
+<li>
+<p>合成：把多个图层拼成最终画面。</p>
+</li>
+<li>
+<p>布局阶段根据页面结构、样式和盒模型计算每个元素的位置与尺寸。</p>
+</li>
+<li>
+<p>绘制阶段把元素的边框、背景、文字等转换成屏幕上的图像内容。</p>
+</li>
+<li>
+<p>合成阶段将多个图层按照顺序组合成最终显示结果。</p>
+</li>
+</ul>
+<p>布局、绘制和合成是浏览器渲染管线中的三个关键阶段。布局关注几何信息，绘制关注像素内容，合成关注图层结果的最终输出。</p>
+<h3 id="6-重排和重绘">6. 重排和重绘</h3>
+<p>当元素的位置、大小或几何属性发生变化时，浏览器通常需要重新计算布局，这一过程称为重排或回流。</p>
+<p>当元素的几何信息不变，但颜色、背景、阴影等外观属性变化时，通常只需要重新绘制，这一过程称为重绘。</p>
+<p>重排通常比重绘成本更高，因为重排可能影响多个后续元素的布局结果。</p>
+<h2 id="十一、总结">十一、总结</h2>
+<p>计算机网络负责数据在不同设备之间的传输，互联网是其大规模工程化形态，Web 渲染负责将网络获取到的资源转换为浏览器中的可视页面。</p>
+<p>整个系统可以概括为一条连续链路：</p>
+<p>浏览器通过 DNS 找到服务器地址，通过 TCP 和 TLS 完成可靠且安全的数据传输，通过 HTTP 获取页面资源，再通过 DOM、CSSOM、布局、绘制和合成将网页呈现在屏幕上。</p>
+<p>该链路中每一步都有明确职责，理解这些职责是学习网络与前端底层原理的基础。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://chiiiiiiing.github.io">Chiiiiiiing</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://chiiiiiiing.github.io/2026/05/15/%E8%AE%A1%E7%BD%91%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/">https://chiiiiiiing.github.io/2026/05/15/%E8%AE%A1%E7%BD%91%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://chiiiiiiing.github.io" target="_blank">Chiiiiiiing Blog</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/images/p1.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width no-desc" href="/2026/05/06/Vibecoding%E5%85%A5%E9%97%A8/" title="Vibecoding入门"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Vibecoding入门</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/p1.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Chiiiiiiing</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">8</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/chiiiiiiing"><i class="fab fa-github"></i><span>My GitHub</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">随便分享点啥</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%88%B0%E5%BA%95%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">1.</span> <span class="toc-text">一、计算机网络到底是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E4%BA%92%E8%81%94%E7%BD%91%E5%92%8C%E6%99%AE%E9%80%9A%E7%BD%91%E7%BB%9C%E6%9C%89%E4%BB%80%E4%B9%88%E5%85%B3%E7%B3%BB"><span class="toc-number">2.</span> <span class="toc-text">二、互联网和普通网络有什么关系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%88%86%E5%B1%82%E6%A8%A1%E5%9E%8B%E6%80%8E%E4%B9%88%E7%90%86%E8%A7%A3"><span class="toc-number">3.</span> <span class="toc-text">三、分层模型怎么理解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%85%88%E8%AE%B0%E4%BD%8F-TCP-IP-%E5%9B%9B%E5%B1%82"><span class="toc-number">3.1.</span> <span class="toc-text">1. 先记住 TCP&#x2F;IP 四层</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%B8%80%E4%B8%AA%E5%85%B7%E4%BD%93%E4%BE%8B%E5%AD%90"><span class="toc-number">3.2.</span> <span class="toc-text">2. 一个具体例子</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81IP%E3%80%81MAC%E3%80%81%E8%B7%AF%E7%94%B1%E5%88%86%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">4.</span> <span class="toc-text">四、IP、MAC、路由分别是什么</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-IP-%E5%9C%B0%E5%9D%80"><span class="toc-number">4.1.</span> <span class="toc-text">1. IP 地址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-MAC-%E5%9C%B0%E5%9D%80"><span class="toc-number">4.2.</span> <span class="toc-text">2. MAC 地址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-ARP-%E5%92%8C%E8%B7%AF%E7%94%B1"><span class="toc-number">4.3.</span> <span class="toc-text">3. ARP 和路由</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81DNS-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%AD%98%E5%9C%A8"><span class="toc-number">5.</span> <span class="toc-text">五、DNS 为什么要存在</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81TCP-%E5%92%8C-UDP-%E6%80%8E%E4%B9%88%E9%80%89"><span class="toc-number">6.</span> <span class="toc-text">六、TCP 和 UDP 怎么选</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-UDP"><span class="toc-number">6.1.</span> <span class="toc-text">1. UDP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-TCP"><span class="toc-number">6.2.</span> <span class="toc-text">2. TCP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E7%94%A8%E8%B0%81"><span class="toc-number">6.3.</span> <span class="toc-text">3. 什么时候用谁</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81HTTP-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">7.</span> <span class="toc-text">七、HTTP 是什么</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%8A%B6%E6%80%81%E7%A0%81"><span class="toc-number">7.1.</span> <span class="toc-text">常见状态码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81HTTPS-%E6%AF%94-HTTP-%E5%A4%9A%E4%BA%86%E4%BB%80%E4%B9%88"><span class="toc-number">8.</span> <span class="toc-text">八、HTTPS 比 HTTP 多了什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E6%B5%8F%E8%A7%88%E5%99%A8%E8%BE%93%E5%85%A5%E7%BD%91%E5%9D%80%E5%90%8E%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88"><span class="toc-number">9.</span> <span class="toc-text">九、浏览器输入网址后发生了什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E3%80%81Web-%E6%B8%B2%E6%9F%93%E5%8E%9F%E7%90%86%E5%85%A5%E9%97%A8%E7%89%88"><span class="toc-number">10.</span> <span class="toc-text">十、Web 渲染原理入门版</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%B5%8F%E8%A7%88%E5%99%A8%E9%87%8C%E5%A4%A7%E8%87%B4%E6%9C%89%E5%93%AA%E4%BA%9B%E9%83%A8%E5%88%86"><span class="toc-number">10.1.</span> <span class="toc-text">1. 浏览器里大致有哪些部分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-DOM-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">10.2.</span> <span class="toc-text">2. DOM 是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-CSSOM-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">10.3.</span> <span class="toc-text">3. CSSOM 是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%B8%B2%E6%9F%93%E6%A0%91%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">10.4.</span> <span class="toc-text">4. 渲染树是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%B8%83%E5%B1%80%E3%80%81%E7%BB%98%E5%88%B6%E3%80%81%E5%90%88%E6%88%90%E5%88%86%E5%88%AB%E5%9C%A8%E5%B9%B2%E4%BB%80%E4%B9%88"><span class="toc-number">10.5.</span> <span class="toc-text">5. 布局、绘制、合成分别在干什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E9%87%8D%E6%8E%92%E5%92%8C%E9%87%8D%E7%BB%98"><span class="toc-number">10.6.</span> <span class="toc-text">6. 重排和重绘</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E6%80%BB%E7%BB%93"><span class="toc-number">11.</span> <span class="toc-text">十一、总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/15/%E8%AE%A1%E7%BD%91%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/" title="计算机网络、互联网与 Web 渲染原理">计算机网络、互联网与 Web 渲染原理</a><time datetime="2026-05-14T16:00:00.000Z" title="发表于 2026-05-15 00:00:00">2026-05-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/06/Vibecoding%E5%85%A5%E9%97%A8/" title="Vibecoding入门">Vibecoding入门</a><time datetime="2026-05-05T16:00:00.000Z" title="发表于 2026-05-06 00:00:00">2026-05-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/27/Git%E4%BB%8E0%E5%88%B0%E8%BF%9B%E9%98%B6/" title="Git从0到进阶">Git从0到进阶</a><time datetime="2026-04-26T16:00:00.000Z" title="发表于 2026-04-27 00:00:00">2026-04-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/12/18/Linux,WSL%E5%8F%8Avim/" title="Linux、WSL与vim">Linux、WSL与vim</a><time datetime="2025-12-18T11:27:00.000Z" title="发表于 2025-12-18 19:27:00">2025-12-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/28/%E6%88%91%E7%9A%84cs%E8%87%AA%E5%AD%A6%E5%8E%86%E7%A8%8B/" title="我的cs自学历程">我的cs自学历程</a><time datetime="2025-11-28T11:27:00.000Z" title="发表于 2025-11-28 19:27:00">2025-11-28</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Chiiiiiiing</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.3-b1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.3-b1"></script><script src="/js/main.js?v=5.5.3-b1"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex@0.16.25/dist/katex.min.css')
+    if (false) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex@0.16.25/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
